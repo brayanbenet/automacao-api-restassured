@@ -9,6 +9,7 @@ import static io.restassured.RestAssured.*;
 public class ProdutoClient {
 
     private static final String CADASTRAR = "/produtos";
+    private static final String DELETAR = "/produtos/{_id}";
 
     public ProdutoClient(){}
 
@@ -19,6 +20,16 @@ public class ProdutoClient {
                     .body(produto)
                 .when()
                     .post(CADASTRAR)
+                ;
+    }
+
+    public Response deletarProduto(String id) {
+        return
+                given()
+                    .spec(ProdutoSpecs.produtoReqSpec())
+                    .pathParam("_id", id)
+                .when()
+                    .delete(DELETAR)
                 ;
     }
 

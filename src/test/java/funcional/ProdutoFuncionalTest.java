@@ -26,6 +26,8 @@ public class ProdutoFuncionalTest {
                 () -> assertEquals("Cadastro realizado com sucesso", response.getMessage()),
                 () -> assertNotNull(response.get_id())
         );
+
+        produtoClient.deletarProduto(response.get_id());
     }
 
 }
