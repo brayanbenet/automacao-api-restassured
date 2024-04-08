@@ -10,6 +10,7 @@ public class ProdutoClient {
 
     private static final String CADASTRAR = "/produtos";
     private static final String DELETAR = "/produtos/{_id}";
+    private static final String BUSCAR_POR_ID = "/produtos/{_id}";
 
     public ProdutoClient(){}
 
@@ -30,6 +31,17 @@ public class ProdutoClient {
                     .pathParam("_id", id)
                 .when()
                     .delete(DELETAR)
+                ;
+    }
+
+    public Response buscarProdutoPorId(String id) {
+
+        return
+                given()
+                    .spec(ProdutoSpecs.produtoReqSpec())
+                    .pathParam("_id", id)
+                .when()
+                    .get(BUSCAR_POR_ID)
                 ;
     }
 
