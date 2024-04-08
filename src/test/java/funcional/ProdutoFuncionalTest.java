@@ -12,7 +12,7 @@ public class ProdutoFuncionalTest {
     ProdutoClient produtoClient = new ProdutoClient();
 
     @Test
-    public void testCadastrarProduto() {
+    public void testCadastrarProdutoComSucesso() {
 
         ProdutoRequest produtoCriado = ProdutoDataFactory.produtoValido();
 
@@ -29,5 +29,53 @@ public class ProdutoFuncionalTest {
 
         produtoClient.deletarProduto(response.get_id());
     }
+
+    @Test
+    public void testBuscarProdutoPorIdComSucesso() {
+
+        ProdutoRequest produto = ProdutoDataFactory.produtoValido();
+
+        ProdutoResponse produtoCriado = produtoClient.cadastrarProduto(produto).as(ProdutoResponse.class);
+
+        ProdutoResponse response = produtoClient.buscarProdutoPorId(produtoCriado.get_id())
+                        .then()
+                            .statusCode(200)
+                            .extract().as(ProdutoResponse.class)
+                        ;
+        assertAll("Produto Response",
+                () -> assertEquals(produtoCriado.get_id(), response.get_id())
+        );
+
+        produtoClient.deletarProduto(produtoCriado.get_id());
+    }
+
+    @Test
+    public void testListarProdutosCadastrados() {
+
+        produtoClient.listarProdutosCadastrados()
+                .then()
+                .log().all()
+                ;
+    }
+
+    @Test
+    public void testEditarProdutoComSucesso() {
+
+        ProdutoRequest produtoBase = ProdutoDataFactory.produtoValido();
+        ProdutoResponse produtoCriado = produtoClient.cadastrarProduto(produtoBase).as(ProdutoResponse.class);
+
+        ProdutoResponse produtoEditado = produtoClient.editarProduto(produtoCriado.get_id(), ProdutoDataFactory.produtoValido())
+                .then()
+                    .statusCode(200)
+                    .extract().as(ProdutoResponse.class)
+                ;
+
+        assertAll("Produto Response",
+                () -> assertEquals(produtoEditado.getMessage(), "Registro alterado com sucesso")
+        );
+
+        produtoClient.deletarProduto(produtoCriado.get_id());
+    }
+
 
 }
